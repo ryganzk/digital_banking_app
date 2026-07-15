@@ -1,7 +1,7 @@
 spring:
   application:
     name: banking_api
-    
+
   datasource:
     url: jdbc:postgresql://localhost:5432/banking_db
     username: banking
@@ -18,3 +18,7 @@ spring:
 
 server:
   port: 8080
+
+jwt:
+  secret: your-256-bit-secret-key-change-this-in-production
+  expiration-ms: 3600000
