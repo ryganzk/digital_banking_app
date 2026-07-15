@@ -1,5 +1,14 @@
 package com.portfolio.banking_api.service;
 
+import com.portfolio.banking_api.repository.UserRepository;
+import com.portfolio.banking_api.dto.AuthResponse;
+import com.portfolio.banking_api.dto.RegisterRequest;
+import com.portfolio.banking_api.dto.LoginRequest;
+import com.portfolio.banking_api.domain.User;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 @Service
 public class AuthService {
     private final UserRepository userRepository;
