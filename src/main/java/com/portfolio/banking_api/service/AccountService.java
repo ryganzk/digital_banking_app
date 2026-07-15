@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class AccountService {
@@ -18,10 +19,11 @@ public class AccountService {
     }
 
     @Transactional
-    public AccountResponse createAccount(CreateAccountRequest request) {
+    public AccountResponse createAccount(CreateAccountRequest request, UUID userId) {
         Account account = new Account(
             request.accountNumber(),
             request.ownerName(),
+            userId,
             request.initialBalance(),
             request.currency()
         );
@@ -29,8 +31,8 @@ public class AccountService {
         return toResponse(saved);
     }
 
-    public List<AccountResponse> getAllAccounts() {
-        return accountRepository.findAll()
+    public List<AccountResponse> getAllAccountsByUserId(UUID userId) {
+        return accountRepository.findAllByUserId(userId)
             .stream()
             .map(this::toResponse)
             .toList();
@@ -41,6 +43,7 @@ public class AccountService {
             account.getId(),
             account.getAccountNumber(),
             account.getOwnerName(),
+            account.getUserId(),
             account.getBalance(),
             account.getCurrency(),
             account.getCreatedAt()

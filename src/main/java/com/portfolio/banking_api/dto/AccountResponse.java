@@ -8,6 +8,7 @@ public record AccountResponse(
     UUID id,
     String accountNumber,
     String ownerName,
+    UUID userId,
     BigDecimal balance,
     String currency,
     Instant createdAt

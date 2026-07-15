@@ -19,6 +19,9 @@ public class Account {
     @Column(name = "owner_name", nullable = false, length = 100)
     private String ownerName;
 
+    @Column(name = "user_id", nullable = false)
+    private UUID userId;
+
     @Column(name = "balance", nullable = false)
     private BigDecimal balance;
 
@@ -33,10 +36,11 @@ public class Account {
     
     }
 
-    public Account(String accountNumber, String ownerName, BigDecimal balance, String currency) {
+    public Account(String accountNumber, String ownerName, UUID userId, BigDecimal balance, String currency) {
         this.id = UUID.randomUUID();
         this.accountNumber = accountNumber;
         this.ownerName = ownerName;
+        this.userId = userId;
         this.balance = balance;
         this.currency = currency;
         this.createdAt = Instant.now();
@@ -45,6 +49,7 @@ public class Account {
     public UUID getId() { return id; }
     public String getAccountNumber() { return accountNumber; }
     public String getOwnerName() { return ownerName; }
+    public UUID getUserId() { return userId; }
     public BigDecimal getBalance() { return balance; }
     public String getCurrency() { return currency; }
     public Instant getCreatedAt() { return createdAt; }
