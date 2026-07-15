@@ -1,8 +1,18 @@
 package com.portfolio.banking_api.controller;
 
+import com.portfolio.banking_api.dto.AuthResponse;
+import com.portfolio.banking_api.dto.LoginRequest;
+import com.portfolio.banking_api.dto.RegisterRequest;
+import com.portfolio.banking_api.service.AuthService;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthController {
+
     private final AuthService authService;
 
     public AuthController(AuthService authService) {

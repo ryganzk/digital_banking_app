@@ -1,6 +1,6 @@
 package com.portfolio.banking_api.dto;
 
-public record LoginRequest() {
-    private String email;
-    private String password;
-}
+public record LoginRequest(
+    String email,
+    String password
+) {}

@@ -1,20 +1,27 @@
 package com.portfolio.banking_api.service;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
-import java.util.Date;
 import com.portfolio.banking_api.domain.User;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
+import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
+import java.util.Date;
+
+@Service
 public class JWTService {
-    private final String secretKey;
-    private final long expirationTime;
-    private final String issuer;
 
-    public JWTService(String secretKey, long expirationTime, String issuer) {
-        this.secretKey = secretKey;
+    private final SecretKey signingKey;
+    private final long expirationTime;
+
+    public JWTService(
+        @Value("${jwt.secret}") String secretKey,
+        @Value("${jwt.expiration-ms}") long expirationTime
+    ) {
+        this.signingKey = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
         this.expirationTime = expirationTime;
-        this.issuer = issuer;
     }
 
     public String generateToken(User user) {
@@ -22,13 +29,13 @@ public class JWTService {
             .setSubject(user.getId().toString())
             .setIssuedAt(new Date())
             .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
-            .signWith(Keys.hmacShaKeyFor(secretKey.getBytes()), SignatureAlgorithm.HS256)
+            .signWith(signingKey)
             .compact();
     }
 
-    public String extractEmail(String token) {
+    public String extractUserId(String token) {
         return Jwts.parserBuilder()
-            .setSigningKey(Keys.hmacShaKeyFor(secretKey.getBytes()))
+            .setSigningKey(signingKey)
             .build()
             .parseClaimsJws(token)
             .getBody()
@@ -38,7 +45,7 @@ public class JWTService {
     public boolean isTokenValid(String token) {
         try {
             Jwts.parserBuilder()
-                .setSigningKey(Keys.hmacShaKeyFor(secretKey.getBytes()))
+                .setSigningKey(signingKey)
                 .build()
                 .parseClaimsJws(token);
             return true;

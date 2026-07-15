@@ -43,6 +43,7 @@ public class User {
         this.middleName = middleName;
         this.lastName = lastName;
         this.role = role;
+        this.createdAt = Instant.now();
     }
 
     public UUID getId() { return id; }

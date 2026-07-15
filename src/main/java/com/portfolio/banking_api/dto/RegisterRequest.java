@@ -1,9 +1,9 @@
 package com.portfolio.banking_api.dto;
 
-public record RegisterRequest() {
-    private String email;
-    private String password;
-    private String firstName;
-    private String middleName;
-    private String lastName;
-}
+public record RegisterRequest(
+    String email,
+    String password,
+    String firstName,
+    String middleName,
+    String lastName
+) {}
