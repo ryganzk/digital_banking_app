@@ -1,21 +1,29 @@
 package com.portfolio.banking_api.domain;
 
+import jakarta.persistence.*;
+import java.math.BigDecimal;
+import java.sql.Types;
+import java.time.Instant;
+import java.util.UUID;
+import org.hibernate.annotations.JdbcTypeCode;
+
 @Entity
 @Table(name = "accounts")
 public class Account {
     @Id
     private UUID id;
 
-    @Column(name = "account_number", nullable = false, unique = true)
+    @Column(name = "account_number", nullable = false, unique = true, length = 20)
     private String accountNumber;
 
-    @Column(name = "owner_name", nullable = false)
+    @Column(name = "owner_name", nullable = false, length = 100)
     private String ownerName;
 
     @Column(name = "balance", nullable = false)
     private BigDecimal balance;
 
-    @Column(name = "currency", nullable = false)
+    @Column(name = "currency", nullable = false, length = 3)
+    @JdbcTypeCode(Types.CHAR)
     private String currency;
 
     @Column(name = "created_at", nullable = false)
