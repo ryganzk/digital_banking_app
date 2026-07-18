@@ -41,41 +41,43 @@ public class AccountService {
     }
 
     @Transactional
-    public AccountResponse deposit(UUID accountId, UUID userId, MoneyRequest request) {
+    public TransactionResponse deposit(UUID accountId, UUID userId, MoneyRequest request) {
         Account account = accountRepository.findByIdAndUserId(accountId, userId)
             .orElseThrow(() -> new NoSuchElementException("Account not found"));
         account.credit(request.amount());
-        Account saved = accountRepository.save(account);
+        accountRepository.save(account);
 
-        transactionRepository.save(new Transaction(
+        Transaction transaction = new Transaction(
             account.getId(),
             TransactionType.DEPOSIT,
             request.amount(),
             account.getCurrency(),
             null,
             null
-        ));
+        );
+        transactionRepository.save(transaction);
 
-        return toResponse(saved);
+        return toTransactionResponse(transaction);
     }
 
     @Transactional
-    public AccountResponse withdraw(UUID accountId, UUID userId, MoneyRequest request) {
+    public TransactionResponse withdraw(UUID accountId, UUID userId, MoneyRequest request) {
         Account account = accountRepository.findByIdAndUserId(accountId, userId)
             .orElseThrow(() -> new NoSuchElementException("Account not found"));
         account.debit(request.amount());
-        Account saved = accountRepository.save(account);
+        accountRepository.save(account);
 
-        transactionRepository.save(new Transaction(
+        Transaction transaction = new Transaction(
             account.getId(),
             TransactionType.WITHDRAWAL,
             request.amount(),
             account.getCurrency(),
             null,
             null
-        ));
+        );
+        transactionRepository.save(transaction);
 
-        return toResponse(saved);
+        return toTransactionResponse(transaction);
     }
 
     @Transactional
@@ -91,7 +93,7 @@ public class AccountService {
         if (!sourceAccount.getCurrency().equals(destinationAccount.getCurrency())) {
             throw new IllegalArgumentException("Currency mismatch");
         }
-        
+
         UUID transferGroupId = UUID.randomUUID();
         sourceAccount.debit(request.amount());
         destinationAccount.credit(request.amount());
