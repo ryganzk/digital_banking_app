@@ -53,4 +53,21 @@ public class Account {
     public BigDecimal getBalance() { return balance; }
     public String getCurrency() { return currency; }
     public Instant getCreatedAt() { return createdAt; }
+
+    public void credit(BigDecimal amount) {
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Amount must be greater than 0");
+        }
+        this.balance = this.balance.add(amount);
+    }
+
+    public void debit(BigDecimal amount) {
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Amount must be greater than 0");
+        }
+        if (amount.compareTo(this.balance) > 0) {
+            throw new IllegalArgumentException("Insufficient balance");
+        }
+        this.balance = this.balance.subtract(amount);
+    }
 }
