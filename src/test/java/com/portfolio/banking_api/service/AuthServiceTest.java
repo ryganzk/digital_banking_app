@@ -5,6 +5,8 @@ import com.portfolio.banking_api.dto.AuthResponse;
 import com.portfolio.banking_api.dto.LoginRequest;
 import com.portfolio.banking_api.dto.RegisterRequest;
 import com.portfolio.banking_api.repository.UserRepository;
+import com.portfolio.banking_api.exception.ConflictException;
+import com.portfolio.banking_api.exception.InvalidCredentialsException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -82,7 +84,7 @@ class AuthServiceTest {
 
         when(userRepository.existsByEmail(request.email())).thenReturn(true);
 
-        assertThrows(RuntimeException.class, () -> authService.register(request));
+        assertThrows(ConflictException.class, () -> authService.register(request));
     }
 
     @Test
@@ -105,7 +107,7 @@ class AuthServiceTest {
 
         when(userRepository.findByEmail(request.email())).thenReturn(Optional.empty());
 
-        assertThrows(RuntimeException.class, () -> authService.login(request));
+        assertThrows(InvalidCredentialsException.class, () -> authService.login(request));
     }
 
     @Test
@@ -115,7 +117,7 @@ class AuthServiceTest {
         when(userRepository.findByEmail(request.email())).thenReturn(Optional.of(user));
         when(passwordEncoder.matches(request.password(), user.getPasswordHash())).thenReturn(false);
 
-        assertThrows(RuntimeException.class, () -> authService.login(request));
+        assertThrows(InvalidCredentialsException.class, () -> authService.login(request));
         verify(passwordEncoder).matches(request.password(), user.getPasswordHash());
     }
 }
