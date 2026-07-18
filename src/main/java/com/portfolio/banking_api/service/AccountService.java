@@ -10,12 +10,13 @@ import com.portfolio.banking_api.dto.TransferRequest;
 import com.portfolio.banking_api.dto.TransactionResponse;
 import com.portfolio.banking_api.domain.TransactionType;
 import com.portfolio.banking_api.repository.TransactionRepository;
+import com.portfolio.banking_api.exception.AccountNotFoundException;
+import com.portfolio.banking_api.exception.BadRequestException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.NoSuchElementException;
 
 @Service
 public class AccountService {
@@ -43,7 +44,7 @@ public class AccountService {
     @Transactional
     public TransactionResponse deposit(UUID accountId, UUID userId, MoneyRequest request) {
         Account account = accountRepository.findByIdAndUserId(accountId, userId)
-            .orElseThrow(() -> new NoSuchElementException("Account not found"));
+            .orElseThrow(() -> new AccountNotFoundException("Account not found"));
         account.credit(request.amount());
         accountRepository.save(account);
 
@@ -63,7 +64,7 @@ public class AccountService {
     @Transactional
     public TransactionResponse withdraw(UUID accountId, UUID userId, MoneyRequest request) {
         Account account = accountRepository.findByIdAndUserId(accountId, userId)
-            .orElseThrow(() -> new NoSuchElementException("Account not found"));
+            .orElseThrow(() -> new AccountNotFoundException("Account not found"));
         account.debit(request.amount());
         accountRepository.save(account);
 
@@ -83,15 +84,15 @@ public class AccountService {
     @Transactional
     public TransactionResponse transfer(UUID accountId, UUID userId, TransferRequest request) {
         Account sourceAccount = accountRepository.findByIdAndUserId(accountId, userId)
-            .orElseThrow(() -> new NoSuchElementException("Account not found"));
+            .orElseThrow(() -> new AccountNotFoundException("Account not found"));
         Account destinationAccount = accountRepository.findByAccountNumber(request.toAccountNumber())
-            .orElseThrow(() -> new NoSuchElementException("Destination account not found"));
+            .orElseThrow(() -> new AccountNotFoundException("Destination account not found"));
 
         if (sourceAccount.getId().equals(destinationAccount.getId())) {
-            throw new IllegalArgumentException("Source and destination accounts cannot be the same");
+            throw new BadRequestException("Source and destination accounts cannot be the same");
         }
         if (!sourceAccount.getCurrency().equals(destinationAccount.getCurrency())) {
-            throw new IllegalArgumentException("Currency mismatch");
+            throw new BadRequestException("Currency mismatch");
         }
 
         UUID transferGroupId = UUID.randomUUID();

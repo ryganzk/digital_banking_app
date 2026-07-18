@@ -1,11 +1,14 @@
 package com.portfolio.banking_api.domain;
 
-import jakarta.persistence.*;
+import com.portfolio.banking_api.exception.BadRequestException;
+import com.portfolio.banking_api.exception.InsufficientFundsException;
+import org.hibernate.annotations.JdbcTypeCode;
+
 import java.math.BigDecimal;
 import java.sql.Types;
 import java.time.Instant;
 import java.util.UUID;
-import org.hibernate.annotations.JdbcTypeCode;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "accounts")
@@ -56,17 +59,17 @@ public class Account {
 
     public void credit(BigDecimal amount) {
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("Amount must be greater than 0");
+            throw new BadRequestException("Amount must be greater than 0");
         }
         this.balance = this.balance.add(amount);
     }
 
     public void debit(BigDecimal amount) {
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("Amount must be greater than 0");
+            throw new BadRequestException("Amount must be greater than 0");
         }
         if (amount.compareTo(this.balance) > 0) {
-            throw new IllegalArgumentException("Insufficient balance");
+            throw new InsufficientFundsException("Insufficient balance");
         }
         this.balance = this.balance.subtract(amount);
     }

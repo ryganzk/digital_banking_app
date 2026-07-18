@@ -5,6 +5,8 @@ import com.portfolio.banking_api.dto.AuthResponse;
 import com.portfolio.banking_api.dto.LoginRequest;
 import com.portfolio.banking_api.dto.RegisterRequest;
 import com.portfolio.banking_api.repository.UserRepository;
+import com.portfolio.banking_api.exception.ConflictException;
+import com.portfolio.banking_api.exception.InvalidCredentialsException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -33,7 +35,7 @@ public class AuthService {
     @Transactional
     public AuthResponse register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.email())) {
-            throw new RuntimeException("User already exists");
+            throw new ConflictException("User already exists");
         }
 
         User user = new User(
@@ -51,10 +53,10 @@ public class AuthService {
 
     public AuthResponse login(LoginRequest request) {
         User user = userRepository.findByEmail(request.email())
-            .orElseThrow(() -> new RuntimeException("Invalid credentials"));
+            .orElseThrow(() -> new InvalidCredentialsException("Invalid credentials"));
 
         if (!passwordEncoder.matches(request.password(), user.getPasswordHash())) {
-            throw new RuntimeException("Invalid credentials");
+            throw new InvalidCredentialsException("Invalid credentials");
         }
 
         return buildAuthResponse(user);
