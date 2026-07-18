@@ -4,6 +4,7 @@ import com.portfolio.banking_api.domain.Account;
 import com.portfolio.banking_api.dto.AccountResponse;
 import com.portfolio.banking_api.dto.CreateAccountRequest;
 import com.portfolio.banking_api.repository.AccountRepository;
+import com.portfolio.banking_api.repository.TransactionRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -25,6 +26,9 @@ class AccountServiceTest {
 
     @Mock
     private AccountRepository accountRepository;
+
+    @Mock
+    private TransactionRepository transactionRepository;
 
     @InjectMocks
     private AccountService accountService;
