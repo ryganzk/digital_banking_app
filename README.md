@@ -1,6 +1,10 @@
 # Banking API
 
+[![CI](https://github.com/ryganzk/digital_banking_app/actions/workflows/ci.yml/badge.svg)](https://github.com/ryganzk/digital_banking_app/actions/workflows/ci.yml)
+
 Portfolio Spring Boot REST API for a simple banking domain: JWT authentication, user-owned accounts, and money movement (deposit, withdraw, transfer) with an append-only transaction ledger.
+
+**Swagger UI:** [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html) (after starting the app)
 
 ## Stack
 
@@ -55,6 +59,17 @@ Expected:
 ```json
 {"status":"UP","service":"banking-api"}
 ```
+
+### 4. Explore the API (Swagger)
+
+Open [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html).
+
+1. Call **register** or **login** under `/api/v1/auth`
+2. Copy the `token` from the response
+3. Click **Authorize**, paste the token (Swagger adds `Bearer `), then **Authorize**
+4. Try protected account endpoints
+
+OpenAPI JSON is also available at `/v3/api-docs`.
 
 ## API overview
 

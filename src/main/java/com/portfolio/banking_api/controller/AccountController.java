@@ -6,6 +6,7 @@ import com.portfolio.banking_api.dto.MoneyRequest;
 import com.portfolio.banking_api.dto.TransferRequest;
 import com.portfolio.banking_api.dto.TransactionResponse;
 import com.portfolio.banking_api.service.AccountService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,6 +17,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/accounts")
+@SecurityRequirement(name = "bearerAuth")
 public class AccountController {
     private final AccountService accountService;
 
