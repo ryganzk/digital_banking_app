@@ -1,0 +1,26 @@
+name: Spurhund
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  scan:
+    name: Scan for secrets
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Spurhund
+        uses: ryganzk/spurhund@v0.1.0
+        with:
+          base-ref: origin/main
+          config-path: .spurhund-rules.yml
